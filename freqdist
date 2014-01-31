@@ -1,0 +1,19 @@
+__author__ = 'Fernando'
+#!/usr/bin/env python
+# -*- coding: latin-1 -*-
+
+from string import punctuation
+
+from collections import Counter
+
+string = "oi oi oi oi eu sou o goku"
+
+def freqdist(string):
+        cnt = Counter()
+        a = string.split(" ")
+
+        for word in a:
+            cnt[word] += 1
+        return cnt
+
+print freqdist(string)
