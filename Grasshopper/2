@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+__author__ = 'fernando.ormonde'
+
+
+import matplotlib.pyplot as plt
+import math, numpy
+import pp
+import time
+import sys
+
+
+
+
+start_time = time.time()
+
+def funcao_pulo(n, m):
+    lista3 = []
+
+    for j in range(m):
+        cosenos = []
+        senos = []
+        for i in range(n):
+            angulo = numpy.random.uniform(0, 2*numpy.pi)
+
+            b = math.cos(angulo)
+            cosenos.append(b)
+
+            c = math.sin(angulo)
+            senos.append(c)
+
+            soma1 = sum(cosenos)
+            soma2 = sum(senos)
+
+            distancia_em_cada_simulacao = (soma1 ** 2 + soma2 ** 2) ** (1. / 2)
+
+
+        r = [soma1, soma2]
+
+        lista3.append(distancia_em_cada_simulacao)
+
+        distancia_media = sum(lista3)/len(lista3)
+
+        #plt.plot(soma1, soma2)
+        #plt.axis([-2, 2, -2, 2])
+        #plt.grid(True)
+        #plt. show()
+
+    return distancia_media
+
+print """Usage: python sum_primes.py [ncpus]
+    [ncpus] - the number of workers to run in parallel,
+    if omitted it will be set to the number of processors in the system
+"""
+
+
+
+ppservers = ()
+
+if len(sys.argv) > 1:
+    ncpus = int(sys.argv[1])
+    job_server = pp.Server(ncpus, ppservers=ppservers)
+
+else:
+    job_server = pp.Server(ppservers=ppservers)
+
+print "Starting pp with", job_server.get_ncpus(), "workers"
+
+job1 = job_server.submit(funcao_pulo, (1000, 1000),(), ("numpy", "math"))
+
+
+result = job1()
+
+inputs = (2,)
+jobs = [(input, job_server.submit(funcao_pulo,(input, 1000), (), ("math", "numpy"))) for input in inputs]
+for input, job in jobs:
+    print "Results", input, "are", job()
+
+
+
+print "Time elapsed: ", time.time() - start_time, "s"
+
+
+
+# Define your jobs
+#job1 = job_server.submit(funcao_pulo, (1000,), (1000,))
+#job2 = job_server.submit(funcao_pulo, (1000,), (1000,))
+
+# Compute and retrieve answers for the jobs.
+#print job1()
+#print job2()
+
+
+#plt.show()
