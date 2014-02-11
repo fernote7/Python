@@ -1,0 +1,34 @@
+# -*- coding: utf-8 -*-
+__author__ = 'Fernando'
+
+def bissexto(n):
+
+    bissextos = []
+    nao_bissextos = []
+
+    for i in range(n):
+
+        if i == 0:
+            continue
+
+        elif i % 4 != 0:
+            nao_bissextos.append(i)
+
+        elif i % 4 == 0 and i % 100 != 0:
+            bissextos.append(i)
+
+        elif i % 4 == 0 and i % 100 == 0 and i % 400 == 0:
+            bissextos.append(i)
+
+        else:
+            nao_bissextos.append(i)
+
+    a = len(bissextos)
+
+    return "Anos bissextos %s" %bissextos, \
+    "Anos nao-bissextos %s" %nao_bissextos, \
+    "Numero de anos bissextos %s" %a
+
+
+
+print bissexto(2011)
