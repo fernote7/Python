@@ -1,0 +1,82 @@
+# -*- coding: utf-8 -*-
+__author__ = 'fernando.ormonde'
+
+
+import matplotlib.pyplot
+import math, numpy
+import pp
+import time
+import sys
+import PrimosFINAL as pf
+
+
+
+
+
+start_time = time.time()
+
+def funcao_pulo(n, m):
+    lista3 = []
+
+    for j in range(m):
+        cosenos = []
+        senos = []
+        for i in range(n):
+            angulo = numpy.random.uniform(0, 2*numpy.pi)
+
+            b = math.cos(angulo)
+            cosenos.append(b)
+
+            c = math.sin(angulo)
+            senos.append(c)
+
+            soma1 = sum(cosenos)
+            soma2 = sum(senos)
+
+            distancia_em_cada_simulacao = (soma1 ** 2 + soma2 ** 2) ** (1. / 2)
+
+
+        r = [soma1, soma2]
+
+        lista3.append(distancia_em_cada_simulacao)
+
+        distancia_media = sum(lista3)/len(lista3)
+
+
+    return distancia_media
+
+
+ppservers = ()
+
+if len(sys.argv) > 1:
+    ncpus = int(sys.argv[1])
+    job_server = pp.Server(ncpus, ppservers=ppservers)
+
+else:
+    job_server = pp.Server(ppservers=ppservers)
+
+print "Starting pp with", job_server.get_ncpus(), "workers"
+
+job1 = job_server.submit(funcao_pulo, (2, 50000),(), ("numpy", "math", "matplotlib.pyplot"))
+job2 = job_server.submit(funcao_pulo, (2, 55000),(), ("numpy", "math", "matplotlib.pyplot"))
+
+job3 = job_server.submit(pf.primos, (10,),(), ("numpy", "math", "matplotlib.pyplot"))
+
+result = job1(), job2(), job3()
+
+print "Distance from origin is", result
+
+print "Time elapsed: ", time.time() - start_time, "s"
+job_server.print_stats()
+
+
+
+#inputs = (2, 100, 1200, 1000)
+#jobs = [(input, job_server.submit(funcao_pulo,(input, 10000), (), ("math", "numpy", "matplotlib.pyplot"))) for input in inputs]
+#for input, job in jobs:
+#    print "Results for", input, "jumps are", job()
+
+#    matplotlib.pyplot.plot(r)
+#    matplotlib.pyplot.axis([-2, 2, -2, 2])
+#    matplotlib.pyplot.grid(True)
+#    matplotlib.pyplot. show()
