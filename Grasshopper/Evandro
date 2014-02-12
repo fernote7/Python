@@ -1,5 +1,3 @@
-__author__ = 'fernando.ormonde'
-
 import numpy
 import math
 import time
